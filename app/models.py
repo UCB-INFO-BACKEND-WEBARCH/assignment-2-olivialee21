@@ -21,7 +21,10 @@ class TaskModel(db.Model):
             'completed': self.completed,
             'due_date': self.due_date.isoformat()+'Z' if self.due_date else None,
             'category_id': self.category_id,
-            'category': self.category.to_dict() if self.category else None,
+            'category': {
+                'id': self.category.id,
+                'name': self.category.name,
+                'color': self.category.color} if self.category else None,
             'created_at': self.created_at.isoformat()+'Z',
             'updated_at': self.updated_at.isoformat()+'Z'
         }
@@ -39,7 +42,7 @@ class CategoryModel(db.Model):
             'id': self.id,
             'name': self.name,
             'color': self.color,
-            'task_count': len(self.tasks)      
+            'task_count': len(self.tasks) if self.tasks is not None else 0     
         }
     
     def to_dict_w_tasks(self):

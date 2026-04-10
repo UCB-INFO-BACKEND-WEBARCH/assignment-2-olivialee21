@@ -27,12 +27,12 @@ class TaskSchema(Schema):
     )
     due_date = fields.DateTime(format='iso', allow_none=True)
     category_id = fields.Int(load_default=None, allow_none=True)
-    completed = fields.Bool(dump_only=True)
+    completed = fields.Bool()
     created_at = fields.DateTime(format='iso', dump_only=True)
     updated_at = fields.DateTime(format='iso', dump_only=True)
 
     @validates('category_id')
-    def validate_category_id(self, value):
+    def validate_category_id(self, value, **kwargs):
         if value is not None:
             from app.models import CategoryModel
             cat = CategoryModel.query.get(value)
@@ -55,10 +55,9 @@ class CategorySchema(Schema):
     task_count = fields.Int(dump_only=True)
 
     @validates('name')
-    def validate_category_name(self, value):
-        if value is not None:
-            from app.models import CategoryModel
-            nam = CategoryModel.query.filter_by(name=value).first()
-            if nam:
-                raise ValidationError('Category with this name already exists.')
+    def validate_category_name(self, value, **kwargs):
+        from app.models import CategoryModel
+        nam = CategoryModel.query.filter_by(name=value).first()
+        if nam:
+            raise ValidationError('Category with this name already exists.')
         return value

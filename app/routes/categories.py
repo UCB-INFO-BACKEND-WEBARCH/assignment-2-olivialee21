@@ -14,7 +14,7 @@ def get_categories():
 
 @categories_blp.route('/categories/<int:cat_id>', methods=['GET'])
 def get_category(cat_id):
-    cat = CategoryModel.query.get_or_404(CategoryModel, cat_id)
+    cat = CategoryModel.query.get_or_404(cat_id)
     return jsonify(cat.to_dict_w_tasks()), 200
 
 @categories_blp.route('/categories', methods=['POST'])
